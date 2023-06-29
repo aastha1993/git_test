@@ -82,3 +82,22 @@ WHERE customer_id <> any (
     WHERE return_date IS NULL
 );
 
+SELECT customer_id, first_name, last_name
+
+FROM customer c
+WHERE EXISTS (
+    SELECT 1
+    FROM rental r
+    WHERE r.customer_id = c.customer_id
+    AND r.return_date IS NULL
+)
+limit 20;
+
+select distinct return_date
+from rental;
+
+SELECT c.customer_id, c.first_name, c.last_name, COUNT(r.rental_id) AS rental_count
+FROM customer c
+LEFT JOIN rental r ON c.customer_id = r.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name
+ORDER BY rental_count DESC;
